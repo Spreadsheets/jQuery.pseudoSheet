@@ -127,7 +127,6 @@ case 6:
 break;
 case 7:
 	    //js
-            yy.obj.html.pop();
             this.$ = yy.handler.callFunction.apply(yy.obj, ['EQUAL', [$$[$0-2], $$[$0]]]);
 
         /*php
@@ -138,9 +137,6 @@ break;
 case 8:
 	    //js
 			this.$ = yy.handler.performMath.apply(yy.obj, ['+', $$[$0-2], $$[$0]]);
-			yy.obj.html.pop();
-			yy.obj.html.pop();
-			yy.obj.html.push(null);
 
         /*php
 			if (is_numeric($$[$0-2]) && is_numeric($$[$0])) {
@@ -182,19 +178,11 @@ case 12:
 			if (isNaN(this.$)) {
 			    this.$ = 0;
 			}
-			yy.obj.html.pop();
-			yy.obj.html.pop();
-            yy.obj.html.push(null);
         //
     
 break;
 case 13:
         this.$ = $$[$0-2] != $$[$0];
-
-        //js
-			yy.obj.html.pop();
-			yy.obj.html.pop();
-			yy.obj.html.push(null);
     
 break;
 case 14:
@@ -218,9 +206,6 @@ break;
 case 16:
         //js
             this.$ = yy.handler.performMath.apply(yy.obj, ['-', $$[$0-2], $$[$0]]);
-            yy.obj.html.pop();
-            yy.obj.html.pop();
-            yy.obj.html.push(null);
 
         /*php
             this.$ = ($$[$0-2] * 1) - ($$[$0] * 1);
@@ -230,9 +215,6 @@ break;
 case 17:
 	    //js
             this.$ = yy.handler.performMath.apply(yy.obj, ['*', $$[$0-2], $$[$0]]);
-            yy.obj.html.pop();
-            yy.obj.html.pop();
-            yy.obj.html.push(null);
 
         /*php
             this.$ = ($$[$0-2] * 1) * ($$[$0] * 1);
@@ -242,9 +224,6 @@ break;
 case 18:
 	    //js
             this.$ = yy.handler.performMath.apply(yy.obj, ['/', $$[$0-2], $$[$0]]);
-            yy.obj.html.pop();
-            yy.obj.html.pop();
-            yy.obj.html.push(null);
 
         /*php
             this.$ = ($$[$0-2] * 1) / ($$[$0] * 1);
@@ -257,9 +236,6 @@ case 19:
                 n2 = yy.handler.number.apply(yy.obj, [$$[$0]]);
 
             this.$ = yy.handler.performMath.apply(yy.obj, ['^', $$[$0-2], $$[$0]]);
-            yy.obj.html.pop();
-            yy.obj.html.pop();
-            yy.obj.html.push(null);
 
         /*php
             this.$ = pow(($$[$0-2] * 1), ($$[$0] * 1));
@@ -424,13 +400,7 @@ case 40:
     
 break;
 case 41:
-        //js
-            yy.obj.html.push($$[$0-1] + $$[$0]);
-            this.$ = $$[$0-1] * 0.01;
-
-        /*php
-            this.$ = $$[$0-1] * 0.01;
-        */
+        this.$ = $$[$0-1] * 0.01;
     
 break;
 case 42:

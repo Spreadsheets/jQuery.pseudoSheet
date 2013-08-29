@@ -122,7 +122,6 @@ expression
     }
 	| expression '=' expression {
 	    //js
-            yy.obj.html.pop();
             $$ = yy.handler.callFunction.apply(yy.obj, ['EQUAL', [$1, $3]]);
 
         /*php
@@ -132,9 +131,6 @@ expression
 	| expression '+' expression {
 	    //js
 			$$ = yy.handler.performMath.apply(yy.obj, ['+', $1, $3]);
-			yy.obj.html.pop();
-			yy.obj.html.pop();
-			yy.obj.html.push(null);
 
         /*php
 			if (is_numeric($1) && is_numeric($3)) {
@@ -172,18 +168,10 @@ expression
 			if (isNaN($$)) {
 			    $$ = 0;
 			}
-			yy.obj.html.pop();
-			yy.obj.html.pop();
-            yy.obj.html.push(null);
         //
     }
 	| expression NOT expression {
         $$ = $1 != $3;
-
-        //js
-			yy.obj.html.pop();
-			yy.obj.html.pop();
-			yy.obj.html.push(null);
     }
 	| expression '>' expression {
 	    //js
@@ -204,9 +192,6 @@ expression
 	| expression '-' expression {
         //js
             $$ = yy.handler.performMath.apply(yy.obj, ['-', $1, $3]);
-            yy.obj.html.pop();
-            yy.obj.html.pop();
-            yy.obj.html.push(null);
 
         /*php
             $$ = ($1 * 1) - ($3 * 1);
@@ -215,9 +200,6 @@ expression
 	| expression '*' expression {
 	    //js
             $$ = yy.handler.performMath.apply(yy.obj, ['*', $1, $3]);
-            yy.obj.html.pop();
-            yy.obj.html.pop();
-            yy.obj.html.push(null);
 
         /*php
             $$ = ($1 * 1) * ($3 * 1);
@@ -226,9 +208,6 @@ expression
 	| expression '/' expression {
 	    //js
             $$ = yy.handler.performMath.apply(yy.obj, ['/', $1, $3]);
-            yy.obj.html.pop();
-            yy.obj.html.pop();
-            yy.obj.html.push(null);
 
         /*php
             $$ = ($1 * 1) / ($3 * 1);
@@ -240,9 +219,6 @@ expression
                 n2 = yy.handler.number.apply(yy.obj, [$3]);
 
             $$ = yy.handler.performMath.apply(yy.obj, ['^', $1, $3]);
-            yy.obj.html.pop();
-            yy.obj.html.pop();
-            yy.obj.html.push(null);
 
         /*php
             $$ = pow(($1 * 1), ($3 * 1));
@@ -403,13 +379,7 @@ number :
         */
     }
 	| number '%' {
-        //js
-            yy.obj.html.push($1 + $2);
-            $$ = $1 * 0.01;
-
-        /*php
-            $$ = $1 * 0.01;
-        */
+        $$ = $1 * 0.01;
     }
 ;
 
