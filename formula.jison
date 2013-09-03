@@ -96,18 +96,18 @@ expression
     }
 	| TIME_AMPM {
 	    //js
-            $$ = yy.handler.time.apply(yy.obj, [$1, true]);
+            $$ = yy.handler.time.call(yy.obj, $1, true);
         //
     }
 	| TIME_24 {
         //js
-            $$ = yy.handler.time.apply(yy.obj, [$1]);
+            $$ = yy.handler.time.call(yy.obj, $1);
         //
 
     }
 	| number {
 	    //js
-            $$ = yy.handler.number.apply(yy.obj, [$1]);
+            $$ = yy.handler.number.call(yy.obj, $1);
 
         /*php
             $$ = $1 * 1;
@@ -122,7 +122,7 @@ expression
     }
 	| expression '=' expression {
 	    //js
-            $$ = yy.handler.callFunction.apply(yy.obj, ['EQUAL', [$1, $3]]);
+            $$ = yy.handler.callFunction.call(yy.obj, 'EQUAL', [$1, $3]);
 
         /*php
             $$ = $1 == $3;
@@ -130,7 +130,7 @@ expression
     }
 	| expression '+' expression {
 	    //js
-			$$ = yy.handler.performMath.apply(yy.obj, ['+', $1, $3]);
+			$$ = yy.handler.performMath.call(yy.obj, '+', $1, $3);
 
         /*php
 			if (is_numeric($1) && is_numeric($3)) {
@@ -142,12 +142,12 @@ expression
     }
 	| '(' expression ')' {
 	    //js
-	        $$ = yy.handler.number.apply(yy.obj, [$2]);
+	        $$ = yy.handler.number.call(yy.obj, $2);
         //
 	}
 	| expression '<' '=' expression {
         //js
-            $$ = yy.handler.callFunction.apply(yy.obj, ['LESS_EQUAL', [$1, $3]]);
+            $$ = yy.handler.callFunction.call(yy.obj, 'LESS_EQUAL', [$1, $3]);
 
         /*php
             $$ = ($1 * 1) <= ($4 * 1);
@@ -155,7 +155,7 @@ expression
     }
     | expression '>' '=' expression {
         //js
-            $$ = yy.handler.callFunction.apply(yy.obj, ['GREATER_EQUAL', [$1, $3]]);
+            $$ = yy.handler.callFunction.call(yy.obj, 'GREATER_EQUAL', [$1, $3]);
 
         /*php
             $$ = ($1 * 1) >= ($4 * 1);
@@ -175,7 +175,7 @@ expression
     }
 	| expression '>' expression {
 	    //js
-			$$ = yy.handler.callFunction.apply(yy.obj, ['GREATER', [$1, $3]]);
+			$$ = yy.handler.callFunction.call(yy.obj, 'GREATER', [$1, $3]);
 
 		/*php
 		    $$ = ($1 * 1) > ($3 * 1);
@@ -183,7 +183,7 @@ expression
     }
 	| expression '<' expression {
         //js
-            $$ = yy.handler.callFunction.apply(yy.obj, ['LESS', [$1, $3]]);
+            $$ = yy.handler.callFunction.call(yy.obj, 'LESS', [$1, $3]);
 
         /*php
             $$ = ($1 * 1) < ($3 * 1);
@@ -191,7 +191,7 @@ expression
     }
 	| expression '-' expression {
         //js
-            $$ = yy.handler.performMath.apply(yy.obj, ['-', $1, $3]);
+            $$ = yy.handler.performMath.call(yy.obj, '-', $1, $3);
 
         /*php
             $$ = ($1 * 1) - ($3 * 1);
@@ -199,7 +199,7 @@ expression
     }
 	| expression '*' expression {
 	    //js
-            $$ = yy.handler.performMath.apply(yy.obj, ['*', $1, $3]);
+            $$ = yy.handler.performMath.call(yy.obj, '*', $1, $3);
 
         /*php
             $$ = ($1 * 1) * ($3 * 1);
@@ -207,7 +207,7 @@ expression
     }
 	| expression '/' expression {
 	    //js
-            $$ = yy.handler.performMath.apply(yy.obj, ['/', $1, $3]);
+            $$ = yy.handler.performMath.call(yy.obj, '/', $1, $3);
 
         /*php
             $$ = ($1 * 1) / ($3 * 1);
@@ -215,10 +215,10 @@ expression
     }
 	| expression '^' expression {
         //js
-            var n1 = yy.handler.number.apply(yy.obj, [$1]),
-                n2 = yy.handler.number.apply(yy.obj, [$3]);
+            var n1 = yy.handler.number.call(yy.obj, $1),
+                n2 = yy.handler.number.call(yy.obj, $3);
 
-            $$ = yy.handler.performMath.apply(yy.obj, ['^', $1, $3]);
+            $$ = yy.handler.performMath.call(yy.obj, '^', $1, $3);
 
         /*php
             $$ = pow(($1 * 1), ($3 * 1));
@@ -226,7 +226,7 @@ expression
     }
 	| '-' expression {
 		//js
-			var n1 = yy.handler.number.apply(yy.obj, [$2]);
+			var n1 = yy.handler.number.call(yy.obj, $2);
 			$$ = n1 * -1;
 			if (isNaN($$)) {
 			    $$ = 0;
@@ -238,7 +238,7 @@ expression
 		}
 	| '+' expression {
 	    //js
-			var n1 = yy.handler.number.apply(yy.obj, [$2]);
+			var n1 = yy.handler.number.call(yy.obj, $2);
 			$$ = n1 * 1;
 			if (isNaN($$)) {
 			    $$ = 0;
@@ -251,7 +251,7 @@ expression
 	| E {/*$$ = Math.E;*/;}
 	| FUNCTION '(' ')' {
 	    //js
-			$$ = yy.handler.callFunction.apply(yy.obj, [$1, '']);
+			$$ = yy.handler.callFunction.call(yy.obj, $1, '');
 
 		/*php
 		    $$ = $this->callFunction($1);
@@ -259,7 +259,7 @@ expression
     }
 	| FUNCTION '(' expseq ')' {
 	    //js
-			$$ = yy.handler.callFunction.apply(yy.obj, [$1, $3]);
+			$$ = yy.handler.callFunction.call(yy.obj, $1, $3);
 
         /*php
             $$ = $this->callFunction($1, $3);
@@ -272,7 +272,7 @@ expression
 cell :
 	FIXEDCELL {
 	    //js
-			$$ = yy.handler.fixedCellValue.apply(yy.obj, [$1]);
+			$$ = yy.handler.fixedCellValue.call(yy.obj, $1);
 
         /*php
             $$ = $this->fixedCellValue($1);
@@ -280,7 +280,7 @@ cell :
     }
 	| FIXEDCELL ':' FIXEDCELL {
 	    //js
-           $$ = yy.handler.fixedCellRangeValue.apply(yy.obj, [$1, $3]);
+           $$ = yy.handler.fixedCellRangeValue.call(yy.obj, $1, $3);
 
 	    /*php
 	        $$ = $this->fixedCellRangeValue($1, $3);
@@ -288,14 +288,14 @@ cell :
     }
 	| CELL {
 	    //js
-			$$ = yy.handler.cellValue.apply(yy.obj, [$1]);
+			$$ = yy.handler.cellValue.call(yy.obj, $1);
         /*php
             $$ = $this->cellValue($1);
         */
     }
 	| CELL ':' CELL {
 	    //js
-			$$ = yy.handler.cellRangeValue.apply(yy.obj, [$1, $3]);
+			$$ = yy.handler.cellRangeValue.call(yy.obj, $1, $3);
 
         /*php
             $$ = $this->cellRangeValue($1, $3);
@@ -303,14 +303,14 @@ cell :
     }
 	| SHEET '!' CELL {
 	    //js
-			$$ = yy.handler.remoteCellValue.apply(yy.obj, [$1, $3]);
+			$$ = yy.handler.remoteCellValue.call(yy.obj, $1, $3);
         /*php
             $$ = $this->remoteCellValue($1, $3);
         */
     }
 	| SHEET '!' CELL ':' CELL {
 	    //js
-            $$ = yy.handler.remoteCellRangeValue.apply(yy.obj, [$1, $3, $5]);
+            $$ = yy.handler.remoteCellRangeValue.call(yy.obj, $1, $3, $5);
 
         /*php
             $$ = $this->remoteCellRangeValue($1, $3, $5);
