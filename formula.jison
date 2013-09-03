@@ -37,6 +37,7 @@
 [A-Za-z_]+           				{return 'VARIABLE';}
 [0-9]+          			  		{return 'NUMBER';}
 "$"									{/* skip whitespace */}
+"&"                                 {return '&';}
 " "									{return ' ';}
 [.]									{return 'DECIMAL';}
 ":"									{return ':';}
@@ -107,7 +108,7 @@ expression
     }
 	| number {
 	    //js
-            $$ = yy.handler.number.call(yy.obj, $1);
+            $$ = yy.handler.number($1);
 
         /*php
             $$ = $1 * 1;
@@ -120,6 +121,14 @@ expression
 	        $$ = substr($1, 1, -1);
         */
     }
+    | expression '&' expression {
+        //js
+            $$ = $1.toString() + $3.toString();
+
+        /*php
+            $$ = $1 . '' . $3;
+        */
+    }
 	| expression '=' expression {
 	    //js
             $$ = yy.handler.callFunction.call(yy.obj, 'EQUAL', [$1, $3]);
@@ -130,7 +139,7 @@ expression
     }
 	| expression '+' expression {
 	    //js
-			$$ = yy.handler.performMath.call(yy.obj, '+', $1, $3);
+			$$ = yy.handler.performMath('+', $1, $3);
 
         /*php
 			if (is_numeric($1) && is_numeric($3)) {
@@ -142,7 +151,7 @@ expression
     }
 	| '(' expression ')' {
 	    //js
-	        $$ = yy.handler.number.call(yy.obj, $2);
+	        $$ = yy.handler.number($2);
         //
 	}
 	| expression '<' '=' expression {
@@ -162,7 +171,7 @@ expression
         */
     }
 	| expression '<' '>' expression {
-        $$ = ($1 * 1) != ($4 * 1);
+        $$ = ($1) != ($4);
 
         //js
 			if (isNaN($$)) {
@@ -191,7 +200,7 @@ expression
     }
 	| expression '-' expression {
         //js
-            $$ = yy.handler.performMath.call(yy.obj, '-', $1, $3);
+            $$ = yy.handler.performMath('-', $1, $3);
 
         /*php
             $$ = ($1 * 1) - ($3 * 1);
@@ -199,7 +208,7 @@ expression
     }
 	| expression '*' expression {
 	    //js
-            $$ = yy.handler.performMath.call(yy.obj, '*', $1, $3);
+            $$ = yy.handler.performMath('*', $1, $3);
 
         /*php
             $$ = ($1 * 1) * ($3 * 1);
@@ -207,7 +216,7 @@ expression
     }
 	| expression '/' expression {
 	    //js
-            $$ = yy.handler.performMath.call(yy.obj, '/', $1, $3);
+            $$ = yy.handler.performMath('/', $1, $3);
 
         /*php
             $$ = ($1 * 1) / ($3 * 1);
@@ -215,10 +224,10 @@ expression
     }
 	| expression '^' expression {
         //js
-            var n1 = yy.handler.number.call(yy.obj, $1),
-                n2 = yy.handler.number.call(yy.obj, $3);
+            var n1 = yy.handler.number($1),
+                n2 = yy.handler.number($3);
 
-            $$ = yy.handler.performMath.call(yy.obj, '^', $1, $3);
+            $$ = yy.handler.performMath('^', $1, $3);
 
         /*php
             $$ = pow(($1 * 1), ($3 * 1));
@@ -226,8 +235,8 @@ expression
     }
 	| '-' expression {
 		//js
-			var n1 = yy.handler.number.call(yy.obj, $2);
-			$$ = n1 * -1;
+			var n1 = yy.handler.numberInverted($2);
+			$$ = n1;
 			if (isNaN($$)) {
 			    $$ = 0;
 			}
@@ -238,8 +247,8 @@ expression
 		}
 	| '+' expression {
 	    //js
-			var n1 = yy.handler.number.call(yy.obj, $2);
-			$$ = n1 * 1;
+			var n1 = yy.handler.number($2);
+			$$ = n1;
 			if (isNaN($$)) {
 			    $$ = 0;
 			}
@@ -368,7 +377,7 @@ variableSequence :
 
 number :
 	NUMBER {
-        $$ = $1 * 1;
+        $$ = $1;
     }
 	| NUMBER DECIMAL NUMBER {
         //js
