@@ -1,0 +1,3 @@
+[submodule "formula"]
+    path = parser/formula
+    url = git://github.com/Spreadsheets/formula.git
